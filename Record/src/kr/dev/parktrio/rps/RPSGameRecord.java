@@ -1,26 +1,19 @@
 package kr.dev.parktrio.rps;
 
 enum GameResultState {
+	GAME_RESULT_STATE_NONE,
 	GAME_RESULT_STATE_WIN,
 	GAME_RESULT_STATE_DRAW,
 	GAME_RESULT_STATE_DEFEAT
 }
 
 public class RPSGameRecord {
-
-	private enum RecordState {
-		RECORD_STATE_NONE,
-		RECORD_STATE_WIN,
-		RECORD_STATE_DRAW,
-		RECORD_STATE_DEFEAT
-	}
-
+	
 	private int win = 0;
 	private int draw = 0;
 	private int defeat = 0;
 	private int combo = 0;
 	private int maxCombo = 0;
-	private RecordState currentState = RecordState.RECORD_STATE_NONE;
 
 	RPSGameRecord() {}
 
@@ -48,10 +41,11 @@ public class RPSGameRecord {
 		return maxCombo;
 	}
 
-	public void setRecord( GameResultState result ) {
+	public void adjustGameResult( GameResultState result ) {
 		switch ( result ) {
 		case GAME_RESULT_STATE_WIN:
 			win++;
+			increaseCombo();
 			break;
 		case GAME_RESULT_STATE_DRAW:
 			draw++;
@@ -60,6 +54,13 @@ public class RPSGameRecord {
 			defeat++;
 			resetCombo();
 			break;
+		}
+	}
+
+	private void increaseCombo() {
+		combo++;
+		if ( combo > maxCombo ) {
+			maxCombo = combo;
 		}
 	}
 
