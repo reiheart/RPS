@@ -11,9 +11,10 @@ public class RPSUtilMain {
 		
 		for (int i = 0; i < 100; i++)
 		{
+			GameResultState state = rUtil.GenerateGameResult();
 			System.out.println((String.format("%d, %d, %d", rUtil.GetWeightOfWin(), rUtil.GetWeightOfDraw(), rUtil.GetWeightOfDefeat())));
-			System.out.println(rUtil.GenerateGameResult().toString());
-			rUtil.SetWeightOfWin(1);
+			System.out.println(state.toString());
+			rUtil.AdjustGameResultWeight(state, 1);
 		}
 	}
 

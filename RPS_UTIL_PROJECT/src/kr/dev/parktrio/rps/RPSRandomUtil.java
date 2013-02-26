@@ -10,7 +10,7 @@ enum GameResultState {
 
 public class RPSRandomUtil {
 
-	static final int TOTAL_WEIGHT = 98;
+	static final int TOTAL_WEIGHT = 99;
 	static final int DEFAULT_WEIGHT = 33;
 	static final int MAX_WEIGHT = 50;
 
@@ -25,9 +25,7 @@ public class RPSRandomUtil {
 	}
 
 	public void SetWeightOfWin(int weight) {
-		//weightOfWin = weight;
-		
-		AdjustWeight(GameResultState.GAME_RESULT_STATE_WIN, weight);
+		weightOfWin = weight;
 	}
 
 	public int GetWeightOfDraw() {
@@ -35,9 +33,7 @@ public class RPSRandomUtil {
 	}
 
 	public void SetWeightOfDraw(int weight) {
-		//weightOfDraw = weight;
-		
-		AdjustWeight(GameResultState.GAME_RESULT_STATE_DRAW, weight);
+		weightOfDraw = weight;
 	}
 
 	public int GetWeightOfDefeat() {
@@ -45,40 +41,17 @@ public class RPSRandomUtil {
 	}
 
 	public void SetWeightOfDefeat(int weight) {
-		//weightOfDefeat = weight;
-
-		AdjustWeight(GameResultState.GAME_RESULT_STATE_DEFEAT, weight);
+		weightOfDefeat = weight;
 	}
 
 	public GameResultState GenerateGameResult() {
 		
-		return GetGameResultState((int)(Math.random() * 1000) % TOTAL_WEIGHT);
+		/* Game range : 0 ~ 98 */
+
+		return GetGameResultState((int)(Math.random() * 1000) % (TOTAL_WEIGHT-1));
 	}
 	
-	private GameResultState GetGameResultState(int randomNumber) {
-
-		/*
-		 * Win range : 0 ~ weightOfWin
-		 * Draw range : weightOfWin ~ weightOfDraw
-		 * Defeat range : weightOfDraw ~ 99
-		 */
-
-		GameResultState result;
-
-		if ((randomNumber >= 0) && (randomNumber < weightOfWin)) {
-			result = GameResultState.GAME_RESULT_STATE_WIN;
-		}
-		else if ((randomNumber >= weightOfWin) && (randomNumber < weightOfWin + weightOfDraw)) {
-			result = GameResultState.GAME_RESULT_STATE_DRAW;
-		}
-		else {
-			result = GameResultState.GAME_RESULT_STATE_DEFEAT;
-		}
-
-		return result;
-	}
-	
-	private void AdjustWeight(GameResultState state, int weight) {
+	public void AdjustGameResultWeight(GameResultState state, int weight) {
 		
 		int pivot = TOTAL_WEIGHT;
 		
@@ -115,5 +88,28 @@ public class RPSRandomUtil {
 			weightOfDraw = pivot / 2;
 			weightOfWin = pivot - weightOfDraw;
 		}
+	}
+	
+	private GameResultState GetGameResultState(int randomNumber) {
+
+		/*
+		 * Win range : 0 ~ weightOfWin-1
+		 * Draw range : weightOfWin ~ weightOfDraw-1
+		 * Defeat range : weightOfDraw ~ TOTAL_WEIGHT-1
+		 */
+
+		GameResultState result;
+
+		if ((randomNumber >= 0) && (randomNumber < weightOfWin)) {
+			result = GameResultState.GAME_RESULT_STATE_WIN;
+		}
+		else if ((randomNumber >= weightOfWin) && (randomNumber < weightOfWin + weightOfDraw)) {
+			result = GameResultState.GAME_RESULT_STATE_DRAW;
+		}
+		else {
+			result = GameResultState.GAME_RESULT_STATE_DEFEAT;
+		}
+
+		return result;
 	}
 }
