@@ -1,5 +1,6 @@
 package kr.dev.parktrio.rps;
 
+import kr.dev.parktrio.rps.RPSGameContext.GameSelectOption;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -31,10 +32,12 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 	private Button buttonP;
 	private Button buttonS;
 
-	private GameState gameState = GameState.GAME_STATE_NONE;
 	private Thread comThread;
 	private ComThreadHandler comThreadHandler;
 	private boolean comThreadEnable;
+
+	private GameState gameState = GameState.GAME_STATE_NONE;
+	private RPSGameContext gameContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 		buttonP.setOnClickListener(this);
 		buttonS.setOnClickListener(this);
 
+		gameContext = new RPSGameContext();
+
 		comThreadHandler = new ComThreadHandler();
 		comThreadEnable = false;
 	}
@@ -66,30 +71,27 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 	public void onClick(View v) {
 		if (v.equals(buttonStart))
 		{
-			textResult.setText(R.string.string_result);
 			buttonStart.setVisibility(View.INVISIBLE);
+			gameContext.resetGame();
 
-			if (comThread != null && comThread.isAlive())
-			{
-				comThread.interrupt();
-			}
-
-			comThread = new Thread(this);
-			comThreadEnable = true;
-			comThread.start();
-
-			gameState = GameState.GAME_STATE_STARTED;
+			startGame();
 		}
 		else if (v.equals(layoutWhole))
 		{
 			if (gameState == GameState.GAME_STATE_JUDGED)
 			{
-				textResult.setText(R.string.string_result);
-				textCom.setText(R.string.string_before);
 				textPlayer.setText(R.string.string_before);
-				buttonStart.setVisibility(View.VISIBLE);
 
-				gameState = GameState.GAME_STATE_NONE;
+				if (gameContext.hasNext())
+				{
+					startGame();
+				}
+				else
+				{
+					buttonStart.setVisibility(View.VISIBLE);
+					gameState = GameState.GAME_STATE_NONE;
+				}
+
 			}
 		}
 		else if (v.equals(buttonR))
@@ -97,6 +99,7 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			if (gameState == GameState.GAME_STATE_STARTED)
 			{
 				textPlayer.setText(R.string.string_R);
+				gameContext.doGame(GameSelectOption.R);
 				gameState = GameState.GAME_STATE_SELECTED;
 			}
 		}
@@ -105,6 +108,7 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			if (gameState == GameState.GAME_STATE_STARTED)
 			{
 				textPlayer.setText(R.string.string_P);
+				gameContext.doGame(GameSelectOption.P);
 				gameState = GameState.GAME_STATE_SELECTED;
 			}
 		}
@@ -113,6 +117,7 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			if (gameState == GameState.GAME_STATE_STARTED)
 			{
 				textPlayer.setText(R.string.string_S);
+				gameContext.doGame(GameSelectOption.S);
 				gameState = GameState.GAME_STATE_SELECTED;
 			}
 		}
@@ -123,6 +128,21 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 		}
 	}
 
+	private void startGame() {
+		textResult.setText(R.string.string_result);
+
+		if (comThread != null && comThread.isAlive())
+		{
+			comThread.interrupt();
+		}
+
+		comThread = new Thread(this);
+		comThreadEnable = true;
+		comThread.start();
+
+		gameState = GameState.GAME_STATE_STARTED;
+	}
+
 	private void showResult() {
 		comThreadEnable = false;
 		if (comThread != null && comThread.isAlive())
@@ -130,8 +150,46 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			comThread.interrupt();
 		}
 
-		textResult.setText(R.string.string_win);
+		switch (gameContext.getCurrentComSelection()) {
+		case P:
+			textCom.setText(R.string.string_P);
+			break;
+		case R:
+			textCom.setText(R.string.string_R);
+			break;
+		case S:
+			textCom.setText(R.string.string_S);
+			break;
+		}
 
+		StringBuilder sb = new StringBuilder();
+		switch (gameContext.getCurrentGameResult()) {
+		case GAME_RESULT_STATE_DEFEAT:
+			sb.append(getResources().getString(R.string.string_lose));
+			break;
+		case GAME_RESULT_STATE_DRAW:
+			sb.append(getResources().getString(R.string.string_nogame));
+			break;
+		case GAME_RESULT_STATE_NONE:
+			sb.append(getResources().getString(R.string.string_null));
+			break;
+		case GAME_RESULT_STATE_WIN:
+			sb.append(getResources().getString(R.string.string_win));
+			break;
+		}
+
+		if (!gameContext.hasNext())
+		{
+			sb.append("\n");
+			sb.append(gameContext.getGameResult());
+		}
+		else if (gameContext.getGameRecord().getCombo() > 0)
+		{
+			sb.append("\n");
+			sb.append(gameContext.getGameRecord().getCombo()).append(" Combo");
+		}
+
+		textResult.setText(sb.toString());
 		gameState = GameState.GAME_STATE_JUDGED;
 	}
 
@@ -140,7 +198,7 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 		while (comThreadEnable)
 		{
 			try {
-				Thread.sleep(200);
+				Thread.sleep(150);
 
 				comThreadHandler.sendMessage(new Message());
 			} catch (InterruptedException e) {

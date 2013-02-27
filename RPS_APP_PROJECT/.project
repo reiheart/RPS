@@ -3,6 +3,8 @@
 	<name>RPS</name>
 	<comment></comment>
 	<projects>
+		<project>Record</project>
+		<project>RPS_UTIL</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
