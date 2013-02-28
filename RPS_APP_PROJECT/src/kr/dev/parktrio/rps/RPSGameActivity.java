@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class RPSGameActivity extends Activity implements OnClickListener, Runnable {
+public class RPSGameActivity extends Activity implements OnClickListener {
 
 	private enum GameState {
 		GAME_STATE_NONE,
@@ -33,6 +33,7 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 	private Button buttonS;
 
 	private Thread comThread;
+	private Thread comDelayThread;
 	private ComThreadHandler comThreadHandler;
 	private boolean comThreadEnable;
 
@@ -74,24 +75,17 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			buttonStart.setVisibility(View.INVISIBLE);
 			gameContext.resetGame();
 
+			textPlayer.setText(R.string.string_before);
+			textCom.setText(R.string.string_before);
+			textResult.setText(R.string.string_result);
 			startGame();
 		}
 		else if (v.equals(layoutWhole))
 		{
 			if (gameState == GameState.GAME_STATE_JUDGED)
 			{
-				textPlayer.setText(R.string.string_before);
-
-				if (gameContext.hasNext())
-				{
-					startGame();
-				}
-				else
-				{
-					buttonStart.setVisibility(View.VISIBLE);
-					gameState = GameState.GAME_STATE_NONE;
-				}
-
+				buttonStart.setVisibility(View.VISIBLE);
+				gameState = GameState.GAME_STATE_NONE;
 			}
 		}
 		else if (v.equals(buttonR))
@@ -129,26 +123,47 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 	}
 
 	private void startGame() {
-		textResult.setText(R.string.string_result);
+		gameState = GameState.GAME_STATE_STARTED;
 
+		startComThread();
+	}
+
+	private void startComThread() {
+		stopComThread();
+
+		comThread = new Thread(){
+			@Override
+			public void run() {
+				while (comThreadEnable)
+				{
+					try {
+						Thread.sleep(150);
+
+						comThreadHandler.sendMessage(new Message());
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+						break;
+					}
+				}
+
+				super.run();
+			}
+		};
+		comThreadEnable = true;
+		comThread.start();
+	}
+
+	private void stopComThread()
+	{
 		if (comThread != null && comThread.isAlive())
 		{
 			comThread.interrupt();
 		}
-
-		comThread = new Thread(this);
-		comThreadEnable = true;
-		comThread.start();
-
-		gameState = GameState.GAME_STATE_STARTED;
 	}
 
 	private void showResult() {
 		comThreadEnable = false;
-		if (comThread != null && comThread.isAlive())
-		{
-			comThread.interrupt();
-		}
+		stopComThread();
 
 		switch (gameContext.getCurrentComSelection()) {
 		case P:
@@ -178,33 +193,54 @@ public class RPSGameActivity extends Activity implements OnClickListener, Runnab
 			break;
 		}
 
-		if (!gameContext.hasNext())
+		if (gameContext.hasNext())
+		{
+			if (gameContext.getGameRecord().getCombo() > 0)
+			{
+				sb.append("\n");
+				sb.append(gameContext.getGameRecord().getCombo()).append(" Combo");
+			}
+
+			gameState = GameState.GAME_STATE_STARTED;
+			startComDelayThread();
+		}
+		else
 		{
 			sb.append("\n");
 			sb.append(gameContext.getGameResult());
-		}
-		else if (gameContext.getGameRecord().getCombo() > 0)
-		{
-			sb.append("\n");
-			sb.append(gameContext.getGameRecord().getCombo()).append(" Combo");
+
+			stopComDelayThread();
+			comThreadEnable = false;
+			stopComThread();
+			gameState = GameState.GAME_STATE_JUDGED;
 		}
 
 		textResult.setText(sb.toString());
-		gameState = GameState.GAME_STATE_JUDGED;
 	}
 
-	@Override
-	public void run() {
-		while (comThreadEnable)
-		{
-			try {
-				Thread.sleep(150);
+	private void startComDelayThread() {
+		stopComDelayThread();
 
-				comThreadHandler.sendMessage(new Message());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-				break;
+		comDelayThread = new Thread(){
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+				startComThread();
 			}
+		};
+
+		comDelayThread.start();
+	}
+
+	private void stopComDelayThread() {
+		if (comDelayThread != null && comDelayThread.isAlive())
+		{
+			comDelayThread.interrupt();
 		}
 	}
 
