@@ -59,13 +59,4 @@
         android:text="@string/string_result"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <Button
-        android:id="@+id/buttonStart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textViewResult"
-        android:layout_alignBottom="@+id/textViewResult"
-        android:layout_centerHorizontal="true"
-        android:text="@string/string_start" />
-
 </RelativeLayout>

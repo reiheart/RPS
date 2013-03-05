@@ -1,6 +1,13 @@
 package kr.dev.parktrio.rps;
 
-public class RPSGameContext {
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class RPSGameContext implements Serializable {
+	private static final long serialVersionUID = -5391535440758549044L;
+
+	public static String propertyKey = "_RPS_GAME_CONTEXT_";
+
 	public enum GameSelectOption
 	{
 		R,
@@ -8,18 +15,19 @@ public class RPSGameContext {
 		S
 	}
 
-	private final int maxGameCount = 10;
+	private int maxGameCount;
 
 	private int currentGameCount;
 
 	private RPSGameRecord gameRecord;
-	private GameSelectOption[] userSelections;
-	private GameResultState[] gameResults;
+	private ArrayList<GameSelectOption> userSelections;
+	private ArrayList<GameResultState> gameResults;
 
 	private final RPSRandomUtil resultGenerator;
 
 	public RPSGameContext()
 	{
+		maxGameCount = 10;
 		resultGenerator = new RPSRandomUtil();
 
 		resetGame();
@@ -31,10 +39,23 @@ public class RPSGameContext {
 
 		gameRecord = null;
 		gameRecord = new RPSGameRecord();
-		userSelections = null;
-		userSelections = new GameSelectOption[10];
-		gameResults = null;
-		gameResults = new GameResultState[10];
+		if (userSelections == null)
+		{
+			userSelections = new ArrayList<RPSGameContext.GameSelectOption>();
+		}
+		else
+		{
+			userSelections.clear();
+		}
+
+		if (gameResults == null)
+		{
+			gameResults = new ArrayList<GameResultState>();
+		}
+		else
+		{
+			gameResults.clear();
+		}
 	}
 
 	public boolean hasNext()
@@ -47,34 +68,40 @@ public class RPSGameContext {
 		GameResultState result = resultGenerator.GenerateGameResult();
 		gameRecord.adjustGameResult(result);
 
-		userSelections[currentGameCount] = selection;
-		gameResults[currentGameCount] = result;
+		userSelections.add(selection);
+		gameResults.add(result);
 
-		currentGameCount++;
+		if (!result.equals(GameResultState.GAME_RESULT_STATE_DRAW)
+				&& !result.equals(GameResultState.GAME_RESULT_STATE_NONE))
+		{
+			currentGameCount++;
+		}
+
 		return result;
 	}
 
 	public GameResultState getCurrentGameResult()
 	{
-		return gameResults[currentGameCount - 1];
+		return gameResults.get(gameResults.size() -1);
 	}
 
 	public GameSelectOption getCurrentComSelection()
 	{
-		return getComSelection(currentGameCount - 1);
+		return getComSelection(gameResults.size() -1);
 	}
 
-	public GameSelectOption getComSelection(int gameCount)
+	private GameSelectOption getComSelection(int gameCount)
 	{
-		if (gameCount >= maxGameCount)
+		if (gameCount >= userSelections.size()
+				|| gameCount >= gameResults.size())
 		{
 			return null;
 		}
 
-		switch (userSelections[gameCount])
+		switch (userSelections.get(gameCount))
 		{
 		case P:
-			switch (gameResults[gameCount])
+			switch (gameResults.get(gameCount))
 			{
 			case GAME_RESULT_STATE_DEFEAT:
 				return GameSelectOption.S;
@@ -85,7 +112,7 @@ public class RPSGameContext {
 			}
 			break;
 		case R:
-			switch (gameResults[gameCount])
+			switch (gameResults.get(gameCount))
 			{
 			case GAME_RESULT_STATE_DEFEAT:
 				return GameSelectOption.P;
@@ -96,7 +123,7 @@ public class RPSGameContext {
 			}
 			break;
 		case S:
-			switch (gameResults[gameCount])
+			switch (gameResults.get(gameCount))
 			{
 			case GAME_RESULT_STATE_DEFEAT:
 				return GameSelectOption.R;
@@ -122,6 +149,14 @@ public class RPSGameContext {
 		return sb.toString();
 	}
 
+	public int getMaxGameCount() {
+		return maxGameCount;
+	}
+
+	public void setMaxGameCount(int maxGameCount) {
+		this.maxGameCount = maxGameCount;
+	}
+
 	public int getCurrentGameCount() {
 		return currentGameCount;
 	}
@@ -139,19 +174,13 @@ public class RPSGameContext {
 	}
 
 	public GameSelectOption[] getUserSelections() {
-		return userSelections;
-	}
-
-	public void setUserSelections(GameSelectOption[] userSelections) {
-		this.userSelections = userSelections;
+		GameSelectOption[] ret = new GameSelectOption[0];
+		return userSelections.toArray(ret);
 	}
 
 	public GameResultState[] getGameResults() {
-		return gameResults;
-	}
-
-	public void setGameResults(GameResultState[] gameResults) {
-		this.gameResults = gameResults;
+		GameResultState[] ret = new GameResultState[0];
+		return gameResults.toArray(ret);
 	}
 
 

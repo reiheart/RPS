@@ -1,0 +1,128 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DemoSettingActivity" >
+
+    <ScrollView
+        android:id="@+id/scrollViewWhole"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/textGameCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="게임수" />
+
+                <EditText
+                    android:id="@+id/editGameCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:text="10" >
+
+                </EditText>
+
+                <Button
+                    android:id="@+id/buttonStart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="Start Game" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="사용자 설정" />
+
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent" >
+                
+                <TextView
+                    android:id="@+id/textUserLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="레벨" />
+
+                <EditText
+                    android:id="@+id/editUserLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="number" >
+                </EditText>
+	            
+	        </LinearLayout>
+
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent" >
+                
+                <TextView
+                    android:id="@+id/textUserGameCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="게임횟수" />
+
+                <EditText
+                    android:id="@+id/editUserGameCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="number" >
+                </EditText>
+	            
+	        </LinearLayout>
+	        
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="match_parent" >
+                
+                <TextView
+                    android:id="@+id/textUserMaxCombo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="최대콤보" />
+
+                <EditText
+                    android:id="@+id/editUserMaxCombo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:inputType="number" >
+                </EditText>
+	            
+	        </LinearLayout>
+	        
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

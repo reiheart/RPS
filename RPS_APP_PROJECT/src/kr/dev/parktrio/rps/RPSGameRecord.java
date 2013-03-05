@@ -1,7 +1,10 @@
 package kr.dev.parktrio.rps;
 
+import java.io.Serializable;
 
-public class RPSGameRecord {
+
+public class RPSGameRecord implements Serializable {
+	private static final long serialVersionUID = 7095387083814030668L;
 
 	private int win = 0;
 	private int draw = 0;

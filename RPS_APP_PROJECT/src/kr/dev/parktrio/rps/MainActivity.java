@@ -11,8 +11,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Intent gameIntent = new Intent(this, RPSGameActivity.class);
-		startActivity(gameIntent);
+		Intent demoIntent = new Intent(this, RPSDemoSettingActivity.class);
+		startActivity(demoIntent);
 	}
 
 }

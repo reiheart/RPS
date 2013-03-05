@@ -26,6 +26,10 @@
             android:name="kr.dev.parktrio.rps.RPSGameActivity"
             android:label="@string/title_activity_rpsgame" >
         </activity>
+        <activity
+            android:name="kr.dev.parktrio.rps.RPSDemoSettingActivity"
+            android:label="@string/title_activity_demo_setting" >
+        </activity>
     </application>
 
 </manifest>

@@ -27,7 +27,6 @@ public class RPSGameActivity extends Activity implements OnClickListener {
 	private TextView textPlayer;
 	private TextView textResult;
 
-	private Button buttonStart;
 	private Button buttonR;
 	private Button buttonP;
 	private Button buttonS;
@@ -51,41 +50,32 @@ public class RPSGameActivity extends Activity implements OnClickListener {
 		textPlayer = (TextView) findViewById(R.id.textViewPlayer);
 		textResult = (TextView) findViewById(R.id.textViewResult);
 
-		buttonStart = (Button) findViewById(R.id.buttonStart);
 		buttonR = (Button) findViewById(R.id.buttonR);
 		buttonP = (Button) findViewById(R.id.buttonP);
 		buttonS = (Button) findViewById(R.id.buttonS);
 
 		layoutWhole.setOnClickListener(this);
-		buttonStart.setOnClickListener(this);
 		buttonR.setOnClickListener(this);
 		buttonP.setOnClickListener(this);
 		buttonS.setOnClickListener(this);
 
-		gameContext = new RPSGameContext();
+		gameContext = (RPSGameContext) getIntent().getSerializableExtra(RPSGameContext.propertyKey);
 
 		comThreadHandler = new ComThreadHandler();
 		comThreadEnable = false;
+
+		startGame();
 	}
 
 	@Override
 	public void onClick(View v) {
-		if (v.equals(buttonStart))
-		{
-			buttonStart.setVisibility(View.INVISIBLE);
-			gameContext.resetGame();
-
-			textPlayer.setText(R.string.string_before);
-			textCom.setText(R.string.string_before);
-			textResult.setText(R.string.string_result);
-			startGame();
-		}
-		else if (v.equals(layoutWhole))
+		if (v.equals(layoutWhole))
 		{
 			if (gameState == GameState.GAME_STATE_JUDGED)
 			{
-				buttonStart.setVisibility(View.VISIBLE);
 				gameState = GameState.GAME_STATE_NONE;
+
+				finish();
 			}
 		}
 		else if (v.equals(buttonR))

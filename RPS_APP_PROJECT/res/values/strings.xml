@@ -13,6 +13,8 @@
     <string name="string_lose">졌다</string>
     <string name="string_nogame">다시한번</string>
     <string name="string_start">시작</string>
-    <string name="string_null"/>
+    <string name="string_null" />
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_demo_setting">DemoSettingActivity</string>
 
 </resources>
