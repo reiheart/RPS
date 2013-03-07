@@ -1,26 +1,24 @@
 package kr.dev.parktrio.rps;
 
-
-public class RPSGameRecord {
+public class RPSGameResult {
 
 	private int win = 0;
-	private int draw = 0;
 	private int defeat = 0;
 	private int combo = 0;
 	private int maxCombo = 0;
+	private RPSUserInfo user;
 
-	RPSGameRecord() {}
+	RPSGameResult() {
+		user = RPSUserInfo.getInstance();
+	}
 
-	RPSGameRecord( int startCombo ) {
+	RPSGameResult( int startCombo ) {
+		user = RPSUserInfo.getInstance();
 		combo = maxCombo = startCombo;
 	}
 
 	public int getWin() {
 		return win;
-	}
-
-	public int getDraw() {
-		return draw;
 	}
 
 	public int getDefeat() {
@@ -34,15 +32,16 @@ public class RPSGameRecord {
 	public int getMaxCombo() {
 		return maxCombo;
 	}
+	
+	public void resetResult() {
+		win = defeat = combo = maxCombo = 0;
+	}
 
 	public void adjustGameResult( GameResultState result ) {
 		switch ( result ) {
 		case GAME_RESULT_STATE_WIN:
 			win++;
 			increaseCombo();
-			break;
-		case GAME_RESULT_STATE_DRAW:
-			draw++;
 			break;
 		case GAME_RESULT_STATE_DEFEAT:
 			defeat++;
@@ -65,4 +64,5 @@ public class RPSGameRecord {
 
 		combo = 0;
 	}
+	
 }
