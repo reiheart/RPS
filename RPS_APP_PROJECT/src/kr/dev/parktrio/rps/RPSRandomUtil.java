@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 
 public class RPSRandomUtil implements Serializable {
-	private static final long serialVersionUID = -1067549755661187418L;
+	private static final long serialVersionUID = 6056691123543462617L;
 
 	static final int TOTAL_WEIGHT = 99;
 	static final int DEFAULT_WEIGHT = 33;

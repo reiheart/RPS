@@ -19,7 +19,7 @@ public class RPSGameContext implements Serializable {
 
 	private int currentGameCount;
 
-	private RPSGameRecord gameRecord;
+	private RPSGameResult gameResult;
 	private ArrayList<GameSelectOption> userSelections;
 	private ArrayList<GameResultState> gameResults;
 
@@ -37,8 +37,8 @@ public class RPSGameContext implements Serializable {
 	{
 		currentGameCount = 0;
 
-		gameRecord = null;
-		gameRecord = new RPSGameRecord();
+		gameResult = null;
+		gameResult = new RPSGameResult();
 		if (userSelections == null)
 		{
 			userSelections = new ArrayList<RPSGameContext.GameSelectOption>();
@@ -66,7 +66,7 @@ public class RPSGameContext implements Serializable {
 	public GameResultState doGame(GameSelectOption selection)
 	{
 		GameResultState result = resultGenerator.GenerateGameResult();
-		gameRecord.adjustGameResult(result);
+		gameResult.adjustGameResult(result);
 
 		userSelections.add(selection);
 		gameResults.add(result);
@@ -138,13 +138,12 @@ public class RPSGameContext implements Serializable {
 		return null;
 	}
 
-	public String getGameResult() {
+	public String getGameResultString() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append(gameRecord.getWin()).append(" ½Â\n");
-		sb.append(gameRecord.getDraw()).append(" ¹«\n");
-		sb.append(gameRecord.getDefeat()).append(" ÆÐ\n");
-		sb.append("Max Combo ").append(gameRecord.getMaxCombo()).append(" ¹ø");
+		sb.append(gameResult.getWin()).append(" ½Â\n");
+		sb.append(gameResult.getDefeat()).append(" ÆÐ\n");
+		sb.append("Max Combo ").append(gameResult.getMaxCombo()).append(" ¹ø");
 
 		return sb.toString();
 	}
@@ -165,12 +164,12 @@ public class RPSGameContext implements Serializable {
 		this.currentGameCount = currentGameCount;
 	}
 
-	public RPSGameRecord getGameRecord() {
-		return gameRecord;
+	public RPSGameResult getGameResult() {
+		return gameResult;
 	}
 
-	public void setGameRecord(RPSGameRecord gameRecord) {
-		this.gameRecord = gameRecord;
+	public void setGameResult(RPSGameResult gameRecord) {
+		this.gameResult = gameRecord;
 	}
 
 	public GameSelectOption[] getUserSelections() {

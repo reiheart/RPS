@@ -1,7 +1,10 @@
 package kr.dev.parktrio.rps;
 
+import java.io.Serializable;
 
-public class RPSRandomUtil {
+
+public class RPSRandomUtil implements Serializable {
+	private static final long serialVersionUID = 6056691123543462617L;
 
 	static final int TOTAL_WEIGHT = 99;
 	static final int DEFAULT_WEIGHT = 33;

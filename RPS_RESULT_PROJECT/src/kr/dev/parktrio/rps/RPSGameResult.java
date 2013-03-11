@@ -1,12 +1,15 @@
 package kr.dev.parktrio.rps;
 
-public class RPSGameResult {
+import java.io.Serializable;
+
+public class RPSGameResult implements Serializable {
+	private static final long serialVersionUID = -5822254359433489515L;
 
 	private int win = 0;
 	private int defeat = 0;
 	private int combo = 0;
 	private int maxCombo = 0;
-	private RPSUserInfo user;
+	private final RPSUserInfo user;
 
 	RPSGameResult() {
 		user = RPSUserInfo.getInstance();
@@ -32,7 +35,7 @@ public class RPSGameResult {
 	public int getMaxCombo() {
 		return maxCombo;
 	}
-	
+
 	public void resetResult() {
 		win = defeat = combo = maxCombo = 0;
 	}
@@ -64,5 +67,5 @@ public class RPSGameResult {
 
 		combo = 0;
 	}
-	
+
 }

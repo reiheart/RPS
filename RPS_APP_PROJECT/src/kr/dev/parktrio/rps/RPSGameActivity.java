@@ -185,10 +185,10 @@ public class RPSGameActivity extends Activity implements OnClickListener {
 
 		if (gameContext.hasNext())
 		{
-			if (gameContext.getGameRecord().getCombo() > 0)
+			if (gameContext.getGameResult().getCombo() > 0)
 			{
 				sb.append("\n");
-				sb.append(gameContext.getGameRecord().getCombo()).append(" Combo");
+				sb.append(gameContext.getGameResult().getCombo()).append(" Combo");
 			}
 
 			gameState = GameState.GAME_STATE_STARTED;
@@ -197,7 +197,7 @@ public class RPSGameActivity extends Activity implements OnClickListener {
 		else
 		{
 			sb.append("\n");
-			sb.append(gameContext.getGameResult());
+			sb.append(gameContext.getGameResultString());
 
 			stopComDelayThread();
 			comThreadEnable = false;
