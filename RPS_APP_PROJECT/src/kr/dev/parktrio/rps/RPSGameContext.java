@@ -28,7 +28,7 @@ public class RPSGameContext implements Serializable {
 	public RPSGameContext()
 	{
 		maxGameCount = 10;
-		resultGenerator = new RPSRandomUtil();
+		resultGenerator = new RPSRandomUtil(1);
 
 		resetGame();
 	}
